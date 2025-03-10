@@ -1,0 +1,28 @@
+class Solution:
+    def countOfSubstrings(self, word: str, k: int) -> int:
+        def atleast(k):
+            vowel = defaultdict(int)
+            nv = 0
+            res = 0
+            l = 0
+            for r in range(len(word)):
+                if word[r] in "aeiou":
+                    vowel[word[r]] += 1
+                else:
+                    nv += 1
+                
+                while len(vowel) == 5 and nv >= k:
+                    res += (len(word) - r)
+                    if word[l] in "aeiou":
+                        vowel[word[l]] -= 1
+                    else:
+                        nv -= 1
+                    if vowel[word[l]] == 0:
+                        vowel.pop(word[l])
+                    l+=1
+            return res
+
+        return atleast(k) - atleast(k+1)
+
+
+        
