@@ -1,0 +1,39 @@
+import sys
+
+MAX_N = 10**6
+spf = list(range(MAX_N + 1))
+
+for i in range(2, int(MAX_N**0.5) + 1):
+    if spf[i] == i:
+        for j in range(i * i, MAX_N + 1, i):
+            if spf[j] == j:
+                spf[j] = i
+
+def get_prime_divisors(n):
+    prime_divs = set()
+    while n > 1:
+        prime_divs.add(spf[n])
+        n //= spf[n]
+    return prime_divs
+
+def compute_M(n, k):
+    if n == 0:
+        return k
+    prime_divs = get_prime_divisors(n)
+    q = sum(prime_divs)
+    p = sum(p - 1 for p in prime_divs)
+    s = len(prime_divs)
+    return n + k + q - p - s
+
+input = sys.stdin.read
+data = input().split()
+T = int(data[0])
+index = 1
+results = []
+
+for _ in range(T):
+    N, K = int(data[index]), int(data[index + 1])
+    results.append(str(compute_M(N, K)))
+    index += 2
+
+sys.stdout.write("\n".join(results) + "\n")
