@@ -1,0 +1,13 @@
+class Solution:
+    def longestNiceSubarray(self, nums: List[int]) -> int:
+        res = 0
+        cur = 0
+        l = 0
+        for i in range(len(nums)):
+            while cur & nums[i]:
+                cur = cur^nums[l]
+                l+=1
+            res = max(res, i-l+1)
+            cur = cur ^ nums[i]
+        return res
+        
