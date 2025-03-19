@@ -1,0 +1,19 @@
+class Solution:
+    def distinctNumbers(self, N, Q, arr, queries):
+        distinct_count = [0] * (N + 1)
+        seen = set()
+        
+        for i in range(N - 1, -1, -1):
+            seen.add(arr[i])
+            distinct_count[i + 1] = len(seen)
+        
+        result = [distinct_count[q] for q in queries]
+        return result
+
+N, Q = map(int, input().split())
+arr = list(map(int, input().split()))
+queries = [int(input()) for _ in range(Q)]
+
+sol = Solution()
+answers = sol.distinctNumbers(N, Q, arr, queries)
+print("\n".join(map(str, answers)))
