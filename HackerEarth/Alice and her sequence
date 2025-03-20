@@ -1,0 +1,28 @@
+MOD = 10**9 + 7
+
+def power(x, y, p):
+    res = 1
+    x = x % p
+    while y > 0:
+        if y & 1:
+            res = (res * x) % p
+        y = y >> 1
+        x = (x * x) % p
+    return res
+
+def count_sequences(N):
+    if N < 3:
+        return 0
+    total = power(3, N, MOD)
+    exclude_one = power(2, N, MOD)
+    exclude_two = power(2, N, MOD)
+    exclude_three = power(2, N, MOD)
+    exclude_two_numbers = power(1, N, MOD)
+
+    result = (total - 3 * exclude_one + 3 * exclude_two_numbers) % MOD
+    return result
+
+T = int(input())
+for _ in range(T):
+    N = int(input())
+    print(count_sequences(N))
