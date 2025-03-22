@@ -1,0 +1,16 @@
+class Solution:
+    def maxValue(self, arr):
+        n = len(arr)
+
+        if n == 1:
+            return arr[0]
+        
+        def rob_linear(nums):
+            prev, curr = 0, 0
+            for val in nums:
+                prev, curr = curr, max(curr, prev + val)
+            return curr
+
+
+        return max(rob_linear(arr[:-1]), rob_linear(arr[1:]))
+
