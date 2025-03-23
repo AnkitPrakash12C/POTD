@@ -1,0 +1,38 @@
+from heapq import heappop, heappush
+from collections import defaultdict, deque
+import sys
+
+MOD = 10**9 + 7
+
+class Solution:
+    def countPaths(self, n: int, roads: list[list[int]]) -> int:
+        graph = defaultdict(list)
+        for u, v, time in roads:
+            graph[u].append((v, time))
+            graph[v].append((u, time))
+        
+        dist = [sys.maxsize] * n
+        dist[0] = 0
+        ways = [0] * n
+        ways[0] = 1
+
+        min_heap = [(0, 0)]  
+
+        while min_heap:
+            curr_dist, node = heappop(min_heap)
+
+            if curr_dist > dist[node]:  
+                continue
+
+            for neighbor, travel_time in graph[node]:
+                new_dist = curr_dist + travel_time
+
+                if new_dist < dist[neighbor]:
+                    dist[neighbor] = new_dist
+                    ways[neighbor] = ways[node]
+                    heappush(min_heap, (new_dist, neighbor))
+
+                elif new_dist == dist[neighbor]:
+                    ways[neighbor] = (ways[neighbor] + ways[node]) % MOD
+
+        return ways[n - 1]
