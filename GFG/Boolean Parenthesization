@@ -1,0 +1,47 @@
+class Solution:
+    def countWays(self, s):
+        n = len(s)
+        dp = [[[-1 for _ in range(2)] for _ in range(n)] for _ in range(n)]
+
+        def solve(i, j, isTrue):
+            if i > j:
+                return 0
+            
+            if i == j:
+                if isTrue:
+                    return 1 if s[i] == 'T' else 0
+                else:
+                    return 1 if s[i] == 'F' else 0
+            
+            if dp[i][j][isTrue] != -1:
+                return dp[i][j][isTrue]
+
+            ans = 0
+            for k in range(i + 1, j, 2):  
+                leftTrue = solve(i, k - 1, 1)
+                leftFalse = solve(i, k - 1, 0)
+                rightTrue = solve(k + 1, j, 1)
+                rightFalse = solve(k + 1, j, 0)
+
+                if s[k] == '&':
+                    if isTrue:
+                        ans += leftTrue * rightTrue
+                    else:
+                        ans += leftFalse * rightFalse + leftTrue * rightFalse + leftFalse * rightTrue
+
+                elif s[k] == '|':
+                    if isTrue:
+                        ans += leftTrue * rightTrue + leftTrue * rightFalse + leftFalse * rightTrue
+                    else:
+                        ans += leftFalse * rightFalse
+
+                elif s[k] == '^':
+                    if isTrue:
+                        ans += leftTrue * rightFalse + leftFalse * rightTrue
+                    else:
+                        ans += leftTrue * rightTrue + leftFalse * rightFalse
+
+            dp[i][j][isTrue] = ans
+            return ans
+
+        return solve(0, n - 1, 1)
