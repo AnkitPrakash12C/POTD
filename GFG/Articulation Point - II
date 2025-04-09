@@ -1,0 +1,43 @@
+from collections import defaultdict
+
+class Solution:
+    def articulationPoints(self, V, edges):
+        
+        def dfs(u, parent):
+            nonlocal time
+            visited[u] = True
+            disc[u] = low[u] = time
+            time += 1
+            children = 0
+
+            for v in graph[u]:
+                if not visited[v]:
+                    children += 1
+                    dfs(v, u)
+                    low[u] = min(low[u], low[v])
+
+                    if parent != -1 and low[v] >= disc[u]:
+                        ap[u] = True
+                elif v != parent:
+                    low[u] = min(low[u], disc[v])
+
+            if parent == -1 and children > 1:
+                ap[u] = True
+
+        graph = defaultdict(list)
+        for u, v in edges:
+            graph[u].append(v)
+            graph[v].append(u)
+
+        time = 0
+        disc = [0] * V
+        low = [0] * V
+        visited = [False] * V
+        ap = [False] * V
+
+        for i in range(V):
+            if not visited[i]:
+                dfs(i, -1)
+
+        res = [i for i, is_ap in enumerate(ap) if is_ap]
+        return res if res else [-1]
